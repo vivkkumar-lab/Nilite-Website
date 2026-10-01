@@ -1,0 +1,372 @@
+/* ==========================================================================
+   NILITE EXPORTS - VIBRANT TROPICAL AESTHETICS & INTERACTIVE COCONUT TREE
+   Rich Emerald, Golden Sunburst, Deep Coconut Brown & Real-time Drop Physics
+   ========================================================================== */
+
+:root {
+  /* Ultra-vibrant tropical palette */
+  --trop-emerald: #00875a;
+  --trop-mint: #00e599;
+  --trop-lime: #a3ff00;
+  --trop-forest: #033624;
+  --trop-midnight: #011d13;
+  --trop-gold: #ffb703;
+  --trop-amber: #fb8500;
+  --trop-coconut: #78350f;
+  --trop-husk: #b45309;
+  
+  --glow-emerald-neon: 0 0 25px rgba(0, 229, 153, 0.45);
+  --glow-gold-neon: 0 0 30px rgba(255, 183, 3, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Vibrant Multi-Color Accent Highlights on Core Elements
+   -------------------------------------------------------------------------- */
+.hero {
+  background: 
+    radial-gradient(circle at 80% 15%, rgba(245, 158, 11, 0.3) 0%, transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(225, 29, 72, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(30, 64, 175, 0.35) 0%, transparent 60%),
+    linear-gradient(135deg, #061526 0%, #0a2540 45%, #0e3b5e 100%) !important;
+}
+
+.hero-title span.highlight {
+  background: linear-gradient(135deg, #ff4d6d 0%, #ffb703 50%, #00e599 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 25px rgba(255, 183, 3, 0.35);
+}
+
+.section-badge {
+  background: linear-gradient(135deg, rgba(251, 133, 0, 0.15), rgba(225, 29, 72, 0.15)) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(251, 133, 0, 0.4) !important;
+  box-shadow: 0 2px 12px rgba(251, 133, 0, 0.2);
+}
+
+/* Glowing Vibrant 3D Buttons */
+.btn-primary.btn-3d {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #0f172a 100%) !important;
+  box-shadow: 0 6px 0 #0f172a, 0 12px 25px rgba(37, 99, 235, 0.45) !important;
+}
+
+.btn-accent.btn-3d {
+  background: linear-gradient(135deg, #ff4d6d 0%, #fb8500 50%, #ffb703 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 0 #9f1239, 0 12px 25px rgba(225, 29, 72, 0.45) !important;
+}
+
+/* --------------------------------------------------------------------------
+   INTERACTIVE COCONUT TREE HARVEST ORCHARD (TROPICAL SUNSET THEME)
+   -------------------------------------------------------------------------- */
+.coconut-harvest-section {
+  position: relative;
+  background: 
+    radial-gradient(circle at 18% 25%, rgba(251, 133, 0, 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 82% 75%, rgba(225, 29, 72, 0.3) 0%, transparent 55%),
+    radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
+    linear-gradient(135deg, #1e1b4b 0%, #2e1065 40%, #451a03 80%, #0f172a 100%) !important;
+  color: #ffffff;
+  padding: 5rem 0 6rem 0;
+  overflow: hidden;
+  border-top: 3px solid #fb8500;
+  border-bottom: 3px solid #ff4d6d;
+}
+
+.harvest-ambient-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(251, 133, 0, 0.25) 0%, rgba(225, 29, 72, 0.18) 40%, transparent 70%);
+  filter: blur(65px);
+  pointer-events: none;
+}
+
+.harvest-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 3.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.harvest-info h2 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.harvest-info h2 span {
+  color: #ffb703;
+}
+
+.harvest-info p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+/* Interactive Hint Bubble */
+.tree-touch-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1.5px dashed #00e599;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #00e599;
+  margin-bottom: 2rem;
+  animation: pulseHint 2s infinite alternate;
+}
+
+@keyframes pulseHint {
+  0% { transform: translateY(0); box-shadow: 0 4px 15px rgba(0, 229, 153, 0.2); }
+  100% { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0, 229, 153, 0.5); }
+}
+
+.harvest-counter-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 480px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.harvest-counter-val {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #ffb703;
+  line-height: 1;
+  font-family: var(--font-heading);
+}
+
+.harvest-counter-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------------------
+   COCONUT TREE STAGE & FALLING PHYSICS
+   -------------------------------------------------------------------------- */
+.tree-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(0, 0, 0, 0.35) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 30px rgba(0, 229, 153, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  perspective: 800px;
+}
+
+/* Sound Toggle Button */
+.sound-toggle-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.sound-toggle-btn:hover {
+  background: rgba(0, 229, 153, 0.3);
+  border-color: #00e599;
+}
+
+/* Coconut Tree SVG Container */
+.coconut-tree-wrap {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  height: 400px;
+  transform-origin: bottom center;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tree-stage:hover .coconut-tree-wrap {
+  animation: gentleSway 3s ease-in-out infinite alternate;
+}
+
+@keyframes gentleSway {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(2.5deg); }
+  100% { transform: translateX(-50%) rotate(-2.5deg); }
+}
+
+.tree-shake-active {
+  animation: vigorousShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
+}
+
+@keyframes vigorousShake {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  20% { transform: translateX(-50%) rotate(-6deg) scale(0.98); }
+  40% { transform: translateX(-50%) rotate(6deg) scale(1.02); }
+  60% { transform: translateX(-50%) rotate(-4deg); }
+  80% { transform: translateX(-50%) rotate(3deg); }
+}
+
+/* Export Wooden Crate Target at Ground */
+.export-crate-basket {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 75px;
+  background: linear-gradient(135deg, #a16207 0%, #78350f 100%);
+  border: 3px solid #d97706;
+  border-radius: var(--radius-sm);
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.export-crate-basket.basket-hit {
+  transform: translateX(-50%) scale(1.1) translateY(4px);
+  box-shadow: 0 0 25px #00e599;
+}
+
+.crate-text {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fef3c7;
+}
+
+.crate-sub {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fde68a;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.2rem;
+}
+
+/* Individual Hanging Coconuts on Tree */
+.hanging-coconut {
+  position: absolute;
+  width: 26px;
+  height: 32px;
+  background: radial-gradient(circle at 35% 35%, #92400e 0%, #451a03 80%);
+  border-radius: 50% 50% 45% 45%;
+  border: 1px solid #b45309;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 5;
+}
+
+.hanging-coconut:hover {
+  transform: scale(1.25);
+  box-shadow: 0 0 12px #ffb703;
+}
+
+/* Falling Coconut with Physics Class */
+.falling-coconut {
+  position: absolute;
+  width: 32px;
+  height: 38px;
+  background: radial-gradient(circle at 35% 35%, #a16207 0%, #451a03 80%);
+  border-radius: 50% 50% 45% 45%;
+  border: 1.5px solid #d97706;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Splash Particle */
+.splash-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #00e599;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 16;
+  box-shadow: 0 0 8px #00e599;
+}
+
+/* Floating Fruit Pop Toast */
+.harvest-toast {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffb703, #fb8500);
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 8px 20px rgba(251, 133, 0, 0.5);
+  pointer-events: none;
+  z-index: 25;
+  animation: floatUpFade 1s forwards ease-out;
+}
+
+@keyframes floatUpFade {
+  0% { transform: translateX(-50%) translateY(0) scale(0.8); opacity: 0; }
+  20% { transform: translateX(-50%) translateY(-10px) scale(1.1); opacity: 1; }
+  80% { transform: translateX(-50%) translateY(-25px) scale(1); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(-40px) scale(0.9); opacity: 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .harvest-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .tree-stage {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}

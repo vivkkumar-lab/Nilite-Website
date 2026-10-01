@@ -1,0 +1,445 @@
+/* ==========================================================================
+   NILITE EXPORTS - 3D AESTHETICS & INTERACTIVE DEPTH ENGINE
+   High-end 3D tilt, volumetric lighting, glassmorphic sheen, gold foil bevels
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 3D Perspective & Ambient Depth
+   -------------------------------------------------------------------------- */
+:root {
+  --perspective-default: 1200px;
+  --glow-primary: rgba(27, 94, 71, 0.4);
+  --glow-gold: rgba(212, 154, 61, 0.45);
+  --shadow-3d-deep: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 12px 24px -4px rgba(15, 62, 46, 0.15),
+    0 24px 48px -8px rgba(9, 38, 28, 0.25);
+  --shadow-3d-floating:
+    0 20px 40px -15px rgba(0, 0, 0, 0.3),
+    0 35px 65px -20px rgba(15, 62, 46, 0.35);
+  --bevel-gold: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 2px 0 rgba(163, 107, 29, 0.6);
+}
+
+/* 3D Scene Container */
+.scene-3d {
+  perspective: var(--perspective-default);
+  transform-style: preserve-3d;
+}
+
+/* --------------------------------------------------------------------------
+   2. Interactive 3D Tilt Card Base
+   -------------------------------------------------------------------------- */
+.tilt-card-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.18s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* Dynamic Glare Overlay */
+.tilt-card-3d::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.08) 35%,
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 10;
+}
+
+.tilt-card-3d:hover::after {
+  opacity: 1;
+}
+
+/* 3D Depth Layers inside Cards */
+.layer-depth-1 {
+  transform: translateZ(15px);
+  transform-style: preserve-3d;
+}
+
+.layer-depth-2 {
+  transform: translateZ(30px);
+  transform-style: preserve-3d;
+}
+
+.layer-depth-3 {
+  transform: translateZ(50px);
+  transform-style: preserve-3d;
+}
+
+.layer-depth-pop {
+  transform: translateZ(65px);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35));
+}
+
+/* --------------------------------------------------------------------------
+   3. Hero 3D Stage & Floating Elements
+   -------------------------------------------------------------------------- */
+.hero-3d-stage {
+  perspective: 1400px;
+  position: relative;
+}
+
+.hero-3d-canvas-bg {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background: 
+    radial-gradient(circle at 75% 30%, rgba(212, 154, 61, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 20% 70%, rgba(27, 94, 71, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 60% 80%, rgba(140, 83, 43, 0.2) 0%, transparent 40%);
+  filter: blur(50px);
+  pointer-events: none;
+  animation: meshFlow 14s ease-in-out infinite alternate;
+}
+
+@keyframes meshFlow {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.08) rotate(3deg); }
+  100% { transform: scale(0.96) rotate(-3deg); }
+}
+
+.hero-image-frame.tilt-card-3d {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-3d-floating);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  transform: rotateY(-8deg) rotateX(4deg);
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
+}
+
+.hero-image-frame.tilt-card-3d:hover {
+  box-shadow: 
+    0 30px 70px -15px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(212, 154, 61, 0.3);
+}
+
+/* 3D Floating Badges on Hero */
+.hero-floating-card.card-3d-pop {
+  transform: translateZ(55px);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 15px 35px -5px rgba(9, 38, 28, 0.25),
+    0 25px 60px -10px rgba(0, 0, 0, 0.3);
+}
+
+.hero-floating-stat-pill {
+  position: absolute;
+  top: -20px;
+  right: -15px;
+  background: linear-gradient(135deg, #1b5e47, #0f3e2e);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(27, 94, 71, 0.5);
+  border: 1.5px solid rgba(212, 154, 61, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateZ(70px);
+  animation: floatStat 5s ease-in-out infinite alternate;
+}
+
+@keyframes floatStat {
+  0% { transform: translateZ(70px) translateY(0); }
+  100% { transform: translateZ(70px) translateY(-10px); }
+}
+
+/* --------------------------------------------------------------------------
+   4. 3D Embossed Government Certificates
+   -------------------------------------------------------------------------- */
+.cert-card-featured {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff 0%, #f6fbf8 100%);
+  border: 1px solid rgba(27, 94, 71, 0.18);
+  box-shadow: 
+    0 10px 30px -8px rgba(15, 62, 46, 0.12),
+    0 20px 45px -12px rgba(9, 38, 28, 0.16);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.cert-card-featured::before {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* 3D Holographic Gold / Emerald Ribbon */
+.cert-holo-ribbon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #f7d070, #c8963e 50%, #fef1c9);
+  color: #553304;
+  box-shadow: 
+    0 4px 12px rgba(200, 150, 62, 0.4),
+    var(--bevel-gold);
+  border: 1px solid #ffe699;
+}
+
+.cert-holo-ribbon svg {
+  color: #7b4c09;
+}
+
+.cert-emblem {
+  box-shadow: 
+    0 8px 20px -3px rgba(15, 62, 46, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  transition: transform 0.3s ease;
+}
+
+.cert-card-featured:hover .cert-emblem {
+  transform: translateZ(25px) scale(1.08) rotate(-4deg);
+}
+
+/* --------------------------------------------------------------------------
+   5. 3D Product Catalog Cards with Pop-out Sheen
+   -------------------------------------------------------------------------- */
+.product-card {
+  perspective: 1000px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 235, 230, 0.9);
+  box-shadow: 
+    0 8px 20px -6px rgba(15, 62, 46, 0.08),
+    0 16px 36px -10px rgba(9, 38, 28, 0.12);
+  transition: transform 0.22s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.product-card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.product-card-img-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(9, 38, 28, 0.4) 100%
+  );
+  pointer-events: none;
+}
+
+.product-card-badge {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 3D Hover Pop */
+.product-card:hover {
+  box-shadow: 
+    0 20px 45px -10px rgba(15, 62, 46, 0.2),
+    0 35px 70px -15px rgba(9, 38, 28, 0.25);
+}
+
+.product-card:hover .product-card-img-wrap img {
+  transform: scale(1.08) translateZ(20px);
+}
+
+/* --------------------------------------------------------------------------
+   6. 3D Buttons with Tactile Depth
+   -------------------------------------------------------------------------- */
+.btn-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.btn-3d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+}
+
+.btn-3d:hover::before {
+  left: 150%;
+}
+
+.btn-primary.btn-3d {
+  box-shadow: 
+    0 6px 0 #09261c,
+    0 12px 24px rgba(9, 38, 28, 0.35);
+}
+
+.btn-primary.btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 0 #09261c,
+    0 16px 28px rgba(9, 38, 28, 0.45);
+}
+
+.btn-primary.btn-3d:active {
+  transform: translateY(4px);
+  box-shadow: 
+    0 2px 0 #09261c,
+    0 6px 12px rgba(9, 38, 28, 0.3);
+}
+
+.btn-accent.btn-3d {
+  box-shadow: 
+    0 6px 0 #926416,
+    0 12px 24px rgba(212, 154, 61, 0.4);
+}
+
+.btn-accent.btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 0 #926416,
+    0 16px 28px rgba(212, 154, 61, 0.5);
+}
+
+.btn-accent.btn-3d:active {
+  transform: translateY(4px);
+  box-shadow: 
+    0 2px 0 #926416,
+    0 6px 12px rgba(212, 154, 61, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   7. 3D Animated Port Route Visualizer Card
+   -------------------------------------------------------------------------- */
+.port-card {
+  perspective: 800px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7faf8 100%);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.port-card:hover {
+  box-shadow: var(--shadow-3d-deep);
+  border-color: var(--accent);
+}
+
+.port-pin-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #1b5e47, #0f3e2e);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(15, 62, 46, 0.3);
+  margin-bottom: 0.85rem;
+  border: 1px solid rgba(212, 154, 61, 0.4);
+}
+
+.port-pin-beacon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #25d366;
+  box-shadow: 0 0 10px #25d366;
+  animation: pulseBeacon 1.5s infinite;
+}
+
+@keyframes pulseBeacon {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   8. 3D RFQ Floating Showcase Stage
+   -------------------------------------------------------------------------- */
+.rfq-wrapper {
+  perspective: 1200px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(27, 94, 71, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.rfq-form-card {
+  box-shadow: 
+    0 20px 45px -10px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  transform: translateZ(30px);
+}
+
+/* --------------------------------------------------------------------------
+   9. 3D Stat Counters
+   -------------------------------------------------------------------------- */
+.stats-strip {
+  transform: translateZ(25px);
+  box-shadow: 
+    0 20px 40px -10px rgba(15, 62, 46, 0.15),
+    0 35px 70px -15px rgba(9, 38, 28, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: linear-gradient(to bottom, #ffffff, #fafcfb);
+}
+
+.stat-card {
+  transition: transform 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   10. 3D Certificate Inspection Modal Seal
+   -------------------------------------------------------------------------- */
+.cert-doc-preview {
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    inset 0 0 30px rgba(201, 180, 140, 0.2);
+  transform-style: preserve-3d;
+}
+
+.seal-stamp {
+  box-shadow: 
+    0 8px 16px rgba(16, 124, 65, 0.25),
+    inset 0 0 8px rgba(16, 124, 65, 0.3);
+  transform: rotate(-10deg) translateZ(20px);
+  background: rgba(255, 255, 255, 0.6);
+}

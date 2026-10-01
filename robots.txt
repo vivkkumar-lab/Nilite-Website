@@ -1,0 +1,17 @@
+# Nilite Exports Production Robots.txt File
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /about.html
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+
+# Exclude Admin Panel & Internal API Routes from Crawling
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /api/admin
+Disallow: /api/inquiries
+
+# Sitemap Index Location
+Sitemap: https://www.niliteexports.com/sitemap.xml

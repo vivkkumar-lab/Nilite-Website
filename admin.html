@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nilite Exports | CMS & Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    :root {
+      --admin-bg: #0f172a;
+      --admin-card: #1e293b;
+      --admin-border: #334155;
+      --admin-accent: #059669;
+      --admin-gold: #dfba73;
+    }
+    body {
+      background-color: var(--admin-bg);
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .admin-header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--admin-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .admin-brand span {
+      color: var(--admin-gold);
+    }
+    .admin-user-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .admin-badge {
+      background: rgba(223, 186, 115, 0.15);
+      color: var(--admin-gold);
+      border: 1px solid rgba(223, 186, 115, 0.4);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .btn-logout {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-logout:hover {
+      background: #dc2626;
+    }
+    
+    /* Login Modal Overlay */
+    .login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .login-card {
+      background: #1e293b;
+      border: 1.5px solid var(--admin-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .login-card h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+    .login-card p {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      margin-bottom: 1.75rem;
+    }
+    .form-group-admin {
+      margin-bottom: 1.25rem;
+    }
+    .form-group-admin label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group-admin input, .form-group-admin select, .form-group-admin textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #ffffff;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .form-group-admin input:focus, .form-group-admin select:focus, .form-group-admin textarea:focus {
+      border-color: var(--admin-accent);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+    }
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, #059669, #047857);
+      color: #fff;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+    }
+    
+    /* Layout Main */
+    .admin-container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+    @media (max-width: 900px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .admin-sidebar {
+      background: #1e293b;
+      border-right: 1px solid var(--admin-border);
+      padding: 1.5rem 1rem;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.8rem 1rem;
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      margin-bottom: 0.35rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: rgba(5, 150, 105, 0.15);
+      color: #00e599;
+    }
+    .admin-content {
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    /* Cards & Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 1024px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .stat-card-admin {
+      background: #1e293b;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .stat-val-admin {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 0.25rem 0;
+    }
+    .stat-lbl-admin {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* Tables */
+    .admin-table-wrap {
+      background: #1e293b;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--admin-border);
+    }
+    .admin-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--admin-border);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    .admin-table tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+    
+    .btn-action {
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      margin-right: 0.35rem;
+    }
+    .btn-edit { background: #3b82f6; color: #fff; }
+    .btn-delete { background: #ef4444; color: #fff; }
+    .btn-view { background: #059669; color: #fff; }
+
+    .crm-filter-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .crm-filter-btn:hover, .crm-filter-btn.active {
+      background: #059669;
+      color: #ffffff;
+      border-color: #059669;
+    }
+
+    /* Modal Form inside CMS */
+    .cms-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .cms-modal-overlay.active {
+      display: flex;
+    }
+    .cms-modal-card {
+      background: #1e293b;
+      border: 1px solid var(--admin-border);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Login Overlay -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-card">
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+        <span style="font-size: 1.5rem;">🔒</span>
+        <h2 style="margin: 0;">Admin CMS Portal</h2>
+      </div>
+      <p>Nilite Exports Management Dashboard — Enter credentials to manage products, inquiries, and blog articles.</p>
+      
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-group-admin">
+          <label>Username</label>
+          <input type="text" id="admin-user" placeholder="Enter admin username" value="admin" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Password</label>
+          <input type="password" id="admin-pass" placeholder="Enter password" value="nilite123" required>
+        </div>
+        <div id="login-error" style="color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none;">
+          Invalid credentials! Default: admin / nilite123
+        </div>
+        <button type="submit" class="btn-login">Login to Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Admin Interface -->
+  <div id="admin-main-ui" style="display: none;">
+    <header class="admin-header">
+      <a href="index.html" class="admin-brand">
+        🌿 NILITE <span>EXPORTS CMS</span>
+      </a>
+      <div class="admin-user-bar">
+        <span class="admin-badge">Admin Session Active</span>
+        <button class="btn-logout" onclick="handleAdminLogout()">Logout</button>
+      </div>
+    </header>
+
+    <div class="admin-container">
+      <!-- Sidebar Navigation -->
+      <aside class="admin-sidebar">
+        <ul class="sidebar-nav">
+          <li><a class="sidebar-link active" onclick="switchAdminTab('dashboard')" id="tab-btn-dashboard">📊 Dashboard</a></li>
+          <li><a class="sidebar-link" onclick="switchAdminTab('rates')" id="tab-btn-rates">📈 Daily Product Rates</a></li>
+          <li><a class="sidebar-link" onclick="switchAdminTab('products')" id="tab-btn-products">📦 Products CMS</a></li>
+          <li><a class="sidebar-link" onclick="switchAdminTab('inquiries')" id="tab-btn-inquiries">📨 Inquiries & RFQs</a></li>
+          <li><a class="sidebar-link" onclick="switchAdminTab('blog')" id="tab-btn-blog">📰 Blog & News</a></li>
+          <li><a class="sidebar-link" onclick="switchAdminTab('whatsapp')" id="tab-btn-whatsapp">💬 WhatsApp Config</a></li>
+          <li><a href="index.html" class="sidebar-link" style="color: #60a5fa; margin-top: 2rem;">🌐 View Live Website &rarr;</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="admin-content">
+        <!-- 1. DASHBOARD OVERVIEW -->
+        <div id="sec-dashboard">
+          <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 0;">Dashboard Overview</h2>
+          <div class="stats-row">
+            <div class="stat-card-admin">
+              <div class="stat-lbl-admin">Catalog Products</div>
+              <div class="stat-val-admin" id="count-products">15</div>
+            </div>
+            <div class="stat-card-admin">
+              <div class="stat-lbl-admin">Active Daily Rates</div>
+              <div class="stat-val-admin" id="count-active-rates" style="color: #dfba73;">15</div>
+            </div>
+            <div class="stat-card-admin">
+              <div class="stat-lbl-admin">Total Inquiries</div>
+              <div class="stat-val-admin" id="count-rfqs" style="color: #00e599;">5</div>
+            </div>
+            <div class="stat-card-admin">
+              <div class="stat-lbl-admin">New Leads</div>
+              <div class="stat-val-admin" id="count-new-rfqs" style="color: #60a5fa;">1</div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin: 0;">Recent B2B Export Leads &amp; Price Snapshots</h3>
+            <button class="btn-action btn-view" onclick="exportRFQsToCSV()">Export All Leads to CSV</button>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Inquiry ID</th>
+                  <th>Submission Date</th>
+                  <th>Buyer &amp; Company</th>
+                  <th>Contact Info</th>
+                  <th>Product</th>
+                  <th>Quantity &amp; Unit</th>
+                  <th>Rate at Submission</th>
+                  <th>Est. Product Value</th>
+                  <th>Destination</th>
+                  <th>Status &amp; Pipeline</th>
+                </tr>
+              </thead>
+              <tbody id="recent-rfqs-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. DAILY PRODUCT RATE MANAGEMENT -->
+        <div id="sec-rates" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0; color: #ffffff;">📈 Daily Product Rate Management</h2>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin: 0.2rem 0 0 0;">Manage daily indicative prices, set effective dates, and view immutable rate history</p>
+            </div>
+            <button class="btn-action btn-view" onclick="openAddRateModal()" style="padding: 0.6rem 1.2rem; font-size: 0.9rem; background: #dfba73; color: #0a2230; font-weight: 800;">
+              + Set New Daily Rate
+            </button>
+          </div>
+
+          <!-- Active Daily Rates Summary Grid -->
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #dfba73; margin-bottom: 1rem;">Current Active Daily Rates</h3>
+          <div class="admin-table-wrap" style="margin-bottom: 2rem;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Active Daily Rate</th>
+                  <th>Currency</th>
+                  <th>Unit</th>
+                  <th>Effective Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="active-rates-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Complete Historical Rates Log -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0;">📜 Complete Historical Rate Log (Non-Overwriting)</h3>
+            <span style="font-size: 0.8rem; color: #94a3b8;">* All past price entries remain stored immutably for audit compliance</span>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Log ID</th>
+                  <th>Product Name</th>
+                  <th>Rate</th>
+                  <th>Currency</th>
+                  <th>Unit</th>
+                  <th>Effective Date</th>
+                  <th>Created At</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="history-rates-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. PRODUCTS CMS -->
+        <div id="sec-products" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0;">Products Management</h2>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin: 0.2rem 0 0 0;">Add, Edit, Delete, and Manage Product Specifications & Images</p>
+            </div>
+            <button class="btn-action btn-view" onclick="openAddProductModal()" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+              + Add New Product
+            </button>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Cert</th>
+                  <th>Origin</th>
+                  <th>MOQ</th>
+                  <th>HS Code</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cms-products-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. INQUIRIES & LEAD DATABASE CRM -->
+        <div id="sec-inquiries" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0;">B2B Buyer Leads & Pipeline Database</h2>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin: 0.2rem 0 0 0;">Track, manage, and convert international export inquiries with price snapshots</p>
+            </div>
+            <button class="btn-action btn-view" onclick="exportRFQsToCSV()" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+              📥 Export Database to CSV
+            </button>
+          </div>
+
+          <!-- CRM Pipeline Filters & Search -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem; background: #0f172a; padding: 1rem; border-radius: 10px; border: 1px solid #334155;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-right: 0.5rem;">Pipeline Status:</span>
+              <button class="crm-filter-btn active" onclick="filterInquiriesByStatus('All', this)">All Leads</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('New', this)" style="border-color: #3b82f6;">New</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('Contacted', this)" style="border-color: #8b5cf6;">Contacted</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('Quotation Sent', this)" style="border-color: #f59e0b;">Quotation Sent</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('Negotiation', this)" style="border-color: #eab308;">Negotiation</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('Converted', this)" style="border-color: #10b981;">Converted</button>
+              <button class="crm-filter-btn" onclick="filterInquiriesByStatus('Closed', this)" style="border-color: #64748b;">Closed</button>
+            </div>
+
+            <div style="flex: 1; max-width: 320px;">
+              <input type="text" placeholder="Search ID, Buyer, Company, Country..." onkeyup="handleInquirySearch(this.value)" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 0.5rem 0.85rem; border-radius: 6px; font-size: 0.85rem;">
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Inquiry ID</th>
+                  <th>Submission Date</th>
+                  <th>Buyer &amp; Company</th>
+                  <th>Contact Info</th>
+                  <th>Product</th>
+                  <th>Quantity &amp; Unit</th>
+                  <th>Rate at Submission</th>
+                  <th>Est. Product Value</th>
+                  <th>Destination</th>
+                  <th>Status &amp; Pipeline</th>
+                </tr>
+              </thead>
+              <tbody id="all-inquiries-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. BLOG & NEWS CMS -->
+        <div id="sec-blog" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0;">Blog & News Management</h2>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin: 0.2rem 0 0 0;">Publish and update trade articles for international buyers</p>
+            </div>
+            <button class="btn-action btn-view" onclick="openAddArticleModal()" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+              + Add New Article
+            </button>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Publish Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cms-blog-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. WHATSAPP CONFIG -->
+        <div id="sec-whatsapp" style="display: none;">
+          <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 0;">WhatsApp Floating Widget Config</h2>
+          <div style="background: #1e293b; border: 1px solid var(--admin-border); border-radius: 12px; padding: 1.5rem; max-width: 600px;">
+            <div class="form-group-admin">
+              <label>WhatsApp Export Phone Number</label>
+              <input type="text" id="wa-config-number" value="+91 8344767687">
+            </div>
+            <div class="form-group-admin">
+              <label>Floating Badge Title</label>
+              <input type="text" id="wa-config-title" value="Need a quotation?">
+            </div>
+            <div class="form-group-admin">
+              <label>Floating Badge Subtitle</label>
+              <input type="text" id="wa-config-sub" value="Chat with our export team">
+            </div>
+            <div class="form-group-admin">
+              <label>Pre-filled Inquiry Message</label>
+              <textarea id="wa-config-msg" rows="4">Hi, I am interested in your products.
+I would like to request an export quotation.</textarea>
+            </div>
+            <button class="btn-action btn-view" onclick="saveWhatsAppConfig()" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+              Save WhatsApp Settings
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="cms-modal-overlay" id="product-modal-overlay">
+    <div class="cms-modal-card">
+      <h3 style="margin-top: 0; color: #fff;" id="prod-modal-heading">Add / Edit Product</h3>
+      <form id="product-form" onsubmit="handleSaveProduct(event)">
+        <input type="hidden" id="prod-edit-id">
+        <div class="form-group-admin">
+          <label>Product Name</label>
+          <input type="text" id="prod-name" placeholder="e.g. Fresh Green Chilli" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Category</label>
+          <select id="prod-cat" required>
+            <option value="agro">Agricultural Produce & Spices (APEDA)</option>
+            <option value="coir">Coir Substrates & Horticulture (Coir Board)</option>
+          </select>
+        </div>
+        <div class="form-group-admin">
+          <label>Certification Badge</label>
+          <input type="text" id="prod-cert" value="APEDA Certified" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Product Image URL</label>
+          <input type="text" id="prod-img" value="assets/images/green_chilli.jpg" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Short Description</label>
+          <textarea id="prod-desc" rows="3" required></textarea>
+        </div>
+        <div class="form-group-admin">
+          <label>Origin</label>
+          <input type="text" id="prod-origin" value="India (Tamil Nadu)" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Available Packaging</label>
+          <input type="text" id="prod-pack" placeholder="e.g. 5kg, 10kg mesh bags" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Bulk Container Packaging</label>
+          <input type="text" id="prod-bulk" placeholder="e.g. 40ft Reefer Container (24 MT)" required>
+        </div>
+        <div class="form-group-admin">
+          <label>MOQ</label>
+          <input type="text" id="prod-moq" placeholder="e.g. 1x 20ft Container (12 MT)" required>
+        </div>
+        <div class="form-group-admin">
+          <label>HS Code</label>
+          <input type="text" id="prod-hs" placeholder="e.g. 0709.60.10" required>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-action btn-delete" onclick="closeCmsModal('product-modal-overlay')">Cancel</button>
+          <button type="submit" class="btn-action btn-view" style="padding: 0.6rem 1.2rem;">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Edit Article Modal -->
+  <div class="cms-modal-overlay" id="article-modal-overlay">
+    <div class="cms-modal-card">
+      <h3 style="margin-top: 0; color: #fff;">Add / Edit Blog Article</h3>
+      <form id="article-form" onsubmit="handleSaveArticle(event)">
+        <input type="hidden" id="art-edit-id">
+        <div class="form-group-admin">
+          <label>Article Title</label>
+          <input type="text" id="art-title" placeholder="e.g. Top 5 Benefits of Washed Coco Peat in Hydroponics" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Category</label>
+          <input type="text" id="art-cat" value="Export Market Insights" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Excerpt / Summary</label>
+          <textarea id="art-excerpt" rows="3" required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-action btn-delete" onclick="closeCmsModal('article-modal-overlay')">Cancel</button>
+          <button type="submit" class="btn-action btn-view" style="padding: 0.6rem 1.2rem;">Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Daily Rate Modal -->
+  <div class="cms-modal-overlay" id="rate-modal-overlay">
+    <div class="cms-modal-card">
+      <h3 style="margin-top: 0; color: #fff;" id="rate-modal-heading">Set Daily Product Rate</h3>
+      <form id="rate-form" onsubmit="handleSaveDailyRate(event)">
+        <div class="form-group-admin">
+          <label>Select Product *</label>
+          <select id="rate-prod-select" required>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group-admin">
+          <label>Daily Product Rate *</label>
+          <input type="number" id="rate-amount" step="0.01" min="0.01" placeholder="e.g. 185" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Currency *</label>
+          <select id="rate-currency" required>
+            <option value="INR">INR (₹ Indian Rupee)</option>
+            <option value="USD">USD ($ US Dollar)</option>
+            <option value="EUR">EUR (€ Euro)</option>
+            <option value="AED">AED (د.إ UAE Dirham)</option>
+            <option value="GBP">GBP (£ British Pound)</option>
+          </select>
+        </div>
+        <div class="form-group-admin">
+          <label>Rate Unit *</label>
+          <select id="rate-unit" required>
+            <option value="KG">KG (Per Kilogram)</option>
+            <option value="MT">MT (Per Metric Tonne)</option>
+            <option value="Piece">Piece (5kg Block / Nut)</option>
+            <option value="Box">Box / Carton</option>
+            <option value="Bale">Coir Bale</option>
+            <option value="Litre">Litre</option>
+            <option value="Container">Container Load</option>
+          </select>
+        </div>
+        <div class="form-group-admin">
+          <label>Effective Date *</label>
+          <input type="date" id="rate-effective-date" required>
+        </div>
+        <div class="form-group-admin" style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem;">
+          <input type="checkbox" id="rate-active-check" checked style="width: 20px; height: 20px; accent-color: #059669;">
+          <label for="rate-active-check" style="margin: 0; color: #ffffff; text-transform: none; font-size: 0.9rem;">Set as Active Rate for Selected Product</label>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-action btn-delete" onclick="closeCmsModal('rate-modal-overlay')">Cancel</button>
+          <button type="submit" class="btn-action btn-view" style="padding: 0.6rem 1.2rem; background: #059669;">Save Daily Rate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Official B2B Export Quotation PDF Modal -->
+  <div class="cms-modal-overlay" id="quotation-modal-overlay">
+    <div class="cms-modal-card" style="max-width: 750px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #334155; padding-bottom: 0.75rem;">
+        <h3 style="margin: 0; color: #dfba73; font-size: 1.3rem;">📄 Generate B2B Export Quotation (PDF)</h3>
+        <button class="btn-action btn-delete" onclick="closeCmsModal('quotation-modal-overlay')">&times;</button>
+      </div>
+
+      <form id="quotation-generator-form" onsubmit="handleGenerateQuotationPdf(event)">
+        <input type="hidden" id="quote-inquiry-id">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-admin">
+            <label>Quotation Number</label>
+            <input type="text" id="quote-num" readonly style="background: #0f172a; color: #dfba73; font-weight: 800;">
+          </div>
+          <div class="form-group-admin">
+            <label>Customer Name</label>
+            <input type="text" id="quote-cust-name" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-admin">
+            <label>Company / Importer</label>
+            <input type="text" id="quote-company">
+          </div>
+          <div class="form-group-admin">
+            <label>Business Email</label>
+            <input type="email" id="quote-email" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-admin">
+            <label>Product Name</label>
+            <input type="text" id="quote-product-name" required>
+          </div>
+          <div class="form-group-admin">
+            <label>Quantity & Unit</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="number" id="quote-qty" required min="1" style="flex: 1;">
+              <select id="quote-qty-unit" style="width: 110px;">
+                <option value="KG">KG</option>
+                <option value="MT">MT</option>
+                <option value="Piece">Piece</option>
+                <option value="Box">Box</option>
+                <option value="Bale">Bale</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+          <div class="form-group-admin">
+            <label>Currency</label>
+            <select id="quote-currency" required onchange="recalculateQuoteTotalAdmin()">
+              <option value="USD">USD ($ US Dollar)</option>
+              <option value="INR">INR (₹ Indian Rupee)</option>
+              <option value="EUR">EUR (€ Euro)</option>
+              <option value="AED">AED (د.إ UAE Dirham)</option>
+              <option value="GBP">GBP (£ British Pound)</option>
+              <option value="AUD">AUD (A$ Australian Dollar)</option>
+              <option value="CAD">CAD (C$ Canadian Dollar)</option>
+              <option value="SAR">SAR (SR Saudi Riyal)</option>
+            </select>
+          </div>
+          <div class="form-group-admin">
+            <label>Incoterm Standard</label>
+            <select id="quote-incoterm" required>
+              <option value="FOB">FOB (Free On Board - Tuticorin/Chennai)</option>
+              <option value="CIF">CIF (Cost, Insurance & Freight)</option>
+              <option value="CFR">CFR (Cost & Freight)</option>
+              <option value="EXW">EXW (Ex-Works Factory Gate)</option>
+              <option value="DDP">DDP (Delivered Duty Paid)</option>
+            </select>
+          </div>
+          <div class="form-group-admin">
+            <label>Destination Port</label>
+            <input type="text" id="quote-destination" required>
+          </div>
+        </div>
+
+        <h4 style="color: #60a5fa; margin: 1rem 0 0.5rem 0; font-size: 0.95rem; text-transform: uppercase;">Export Price Breakdown & Charge Items</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid #334155;">
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Base Product Rate (Per Unit)</label>
+            <input type="number" step="0.01" id="quote-unit-rate" required oninput="recalculateQuoteTotalAdmin()">
+          </div>
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Packaging Charges</label>
+            <input type="number" step="0.01" id="quote-pack-charge" value="0" oninput="recalculateQuoteTotalAdmin()">
+          </div>
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Inland Transportation</label>
+            <input type="number" step="0.01" id="quote-inland-charge" value="0" oninput="recalculateQuoteTotalAdmin()">
+          </div>
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Documentation & Inspection</label>
+            <input type="number" step="0.01" id="quote-doc-charge" value="0" oninput="recalculateQuoteTotalAdmin()">
+          </div>
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Ocean Freight</label>
+            <input type="number" step="0.01" id="quote-freight-charge" value="0" oninput="recalculateQuoteTotalAdmin()">
+          </div>
+          <div class="form-group-admin" style="margin: 0;">
+            <label>Marine Insurance</label>
+            <input type="number" step="0.01" id="quote-insurance-charge" value="0" oninput="recalculateQuoteTotalAdmin()">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; background: rgba(5, 150, 105, 0.15); border: 1px solid rgba(5, 150, 105, 0.4); padding: 0.85rem 1.25rem; border-radius: 8px;">
+          <span style="font-weight: 800; color: #ffffff; text-transform: uppercase; font-size: 0.85rem;">Calculated Final Quotation Total:</span>
+          <span style="font-size: 1.4rem; font-weight: 900; color: #00e599;" id="quote-calculated-total-display">$0.00</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+          <div class="form-group-admin">
+            <label>Payment Terms</label>
+            <input type="text" id="quote-payment-terms" value="30% Advance T/T Deposit, 70% against Bill of Lading (B/L) scan copy">
+          </div>
+          <div class="form-group-admin">
+            <label>Delivery Timeframe</label>
+            <input type="text" id="quote-delivery-terms" value="14 Days from Order Confirmation & Deposit Receipt">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-action btn-delete" onclick="closeCmsModal('quotation-modal-overlay')">Cancel</button>
+          <button type="submit" class="btn-action btn-view" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #059669, #047857); font-size: 0.95rem;">
+            📄 Generate & Print PDF Quotation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+  <script src="js/daily-rates.js"></script>
+  <script src="js/currency.js"></script>
+  <script src="js/quotation-pdf.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
