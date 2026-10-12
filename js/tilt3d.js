@@ -27,10 +27,12 @@ class Interactive3DEngine {
 
   bindTiltCards() {
     const cards = document.querySelectorAll(
-      ".tilt-card-3d, .cert-card-featured, .product-card, .port-card, .rfq-form-card"
+      ".tilt-card-3d, .cert-card-featured, .product-card, .port-card"
     );
 
     cards.forEach(card => {
+      // Never apply 3D tilt or touch effects to the RFQ form
+      if (card.classList.contains("rfq-form-card") || card.closest(".rfq-form-card")) return;
       if (card.dataset.tiltInitialized) return;
       card.dataset.tiltInitialized = "true";
       card.classList.add("tilt-card-3d");

@@ -688,13 +688,22 @@
   margin-bottom: 0;
 }
 
-/* RFQ Form Card */
+/* RFQ Form Card - Flat, High-Performance, Zero-Lag */
 .rfq-form-card {
   background: #ffffff;
   border-radius: var(--radius-lg);
   padding: 2.5rem;
   color: var(--text-main);
   box-shadow: var(--shadow-lg);
+  transform: none !important;
+  perspective: none !important;
+  transform-style: flat !important;
+  will-change: auto !important;
+  touch-action: pan-y !important;
+}
+
+.rfq-form-card::after {
+  display: none !important;
 }
 
 .form-title {
@@ -740,7 +749,9 @@
   font-size: 0.9rem;
   color: var(--text-main);
   background-color: #fbfdfc;
-  transition: all var(--transition-fast);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  transform: none !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 .form-control:focus {

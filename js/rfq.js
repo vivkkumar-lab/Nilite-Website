@@ -1,6 +1,16 @@
 const EXPORT_PHONE_NUMBER = "918344767687"; // Official Manager: Vivek Santhakumar
 const SECONDARY_EXPORT_PHONE = "919597596903"; // Regional Manager: Askar Ali
 
+let indicativeRaf = null;
+
+function debouncedIndicativePriceDisplay() {
+  if (indicativeRaf) cancelAnimationFrame(indicativeRaf);
+  indicativeRaf = requestAnimationFrame(updateIndicativePriceDisplay);
+}
+
+// Global hook
+window.updateIndicativePriceDisplay = debouncedIndicativePriceDisplay;
+
 document.addEventListener("DOMContentLoaded", () => {
   setupRFQForm();
   updateIndicativePriceDisplay();
@@ -21,13 +31,13 @@ function setupRFQForm() {
     waBtn.addEventListener("click", handleWhatsAppQuote);
   }
 
-  if (prodSelect) prodSelect.addEventListener("change", updateIndicativePriceDisplay);
-  if (qtyInput) qtyInput.addEventListener("input", updateIndicativePriceDisplay);
-  if (unitSelect) unitSelect.addEventListener("change", updateIndicativePriceDisplay);
+  if (prodSelect) prodSelect.addEventListener("change", debouncedIndicativePriceDisplay);
+  if (qtyInput) qtyInput.addEventListener("input", debouncedIndicativePriceDisplay);
+  if (unitSelect) unitSelect.addEventListener("change", debouncedIndicativePriceDisplay);
 }
 
 /**
- * Update Indicative Price Display Banner based on today's active rate
+ * Update Indicative Price Display Banner based on today's active rate (Optimized)
  */
 function updateIndicativePriceDisplay() {
   const prodSelect = document.getElementById("rfq-product-select");
